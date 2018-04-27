@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1524829414 source:c:\aplicatii\codeblocks 13.15\projects\universitate\lfa\tema 2\1\main.cpp
+	<iostream>
+	<fstream>
+	<cstring>
+
