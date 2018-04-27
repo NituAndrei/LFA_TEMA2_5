@@ -1,0 +1,94 @@
+#include <iostream>
+#include <fstream>
+#include <cstring>
+
+
+using namespace std; //wiki 3pg: 1-paste eneunt 2-abordare 3-pas iterativ
+
+struct stare
+{
+    struct tranzitie
+    {
+        int ndestinatii=0,destinatii[25]={0};
+    }tranzitii[27];
+    int ntranzitii=0;
+    int final=0;
+}stari[100];
+/*
+tranzitie-96=destinatie a==97
+data.in:
+nfinale
+finale
+total tranzitii
+tranzitii
+cuvant
+*/
+
+void rezolva(int stareCurenta,int lgMax,int lungimeCuvant, char *&cuvantCurent)
+{
+    if(lungimeCuvant==lgMax)
+    {
+        //cout<<'\n';
+        if(stari[stareCurenta].final)
+            cout<<cuvantCurent<<'\n';
+        return;
+    }
+    //cout<<stareCurenta<<" ";
+    int i,j; //tranzitieCitita=int((cuvant[lungimeCuvant])-96);
+    for(j=0;j<=26;j++)
+    {
+        if(stari[stareCurenta].ntranzitii==0)
+            continue;
+        for(i=0;i<stari[stareCurenta].tranzitii[j].ndestinatii;i++)
+        {
+            cuvantCurent[lungimeCuvant]=char(j+96);
+            rezolva(stari[stareCurenta].tranzitii[j].destinatii[i],lgMax,lungimeCuvant+1,cuvantCurent);
+        }
+    }
+
+    return;
+}
+
+int main()
+{
+    ifstream f("data.in");
+    int nfinale,totalTranzitii,i,aux1,aux2,lgMax;
+    char link;
+    f>>nfinale;
+    for(i=0;i<nfinale;i++)
+    {
+        f>>aux1;
+        stari[aux1].final=1;
+    }
+    f>>totalTranzitii;
+    for(i=0;i<totalTranzitii;i++)
+    {
+        f>>aux1>>link>>aux2;
+        stari[aux1].tranzitii[int(link-96)].destinatii[stari[aux1].tranzitii[int(link-96)].ndestinatii++]=aux2;
+        stari[aux1].ntranzitii++;
+    }
+    f>>lgMax;
+    char *cuvCurent=new char[lgMax];
+    for(i=0;i<lgMax;i++)
+        cuvCurent[i]='\0';
+    rezolva(1,lgMax,0,cuvCurent);
+    /*
+    for(i=1;i<=100;i++)
+    {
+        if(stari[i].ntranzitii==0)
+            continue;
+        cout<<i<<'\n';
+        cout<<stari[i].ntranzitii<<" tranzitii din el:\n";
+        for(int j=1;j<=25;j++)
+        {
+            if(stari[i].tranzitii[j].ndestinatii==0)
+                continue;
+            cout<<stari[i].tranzitii[j].ndestinatii<<" cu "<<char(j+96)<<": \n";
+            for(int l=0;l<stari[i].tranzitii[j].ndestinatii;l++)
+                cout<<i<<" "<<char(j+96)<<" "<<stari[i].tranzitii[j].destinatii[l]<<'\n';
+        }
+        cout<<'\n';
+    }
+    */
+    f.close();
+}
